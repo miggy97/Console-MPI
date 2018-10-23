@@ -15,3 +15,7 @@ all: $(OBJS)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+
+clean:
+	rm *.o
+	rm $(EXEC)

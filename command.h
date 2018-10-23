@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <dirent.h>
+#include <unistd.h>
 using namespace std;
 
 typedef struct command_t

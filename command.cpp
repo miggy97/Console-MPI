@@ -1,5 +1,4 @@
 #include "command.h"
-#include "time.h"
 
 Command::Command(Tree *tree)
 {
@@ -485,12 +484,61 @@ void Command::touch(command_t *command)
 }
 void Command::lls(command_t *command)
 {
+    if ((*command->args).size() != 0)
+    {
+        printf("Error! The command lls doesn't accept arguments!");
+        return;
+    }
+
+    struct dirent **namelist; //files and dir list
+    struct stat sb;           //Get info of dir and file
+    int n;
+
+    n = scandir(".", &namelist, NULL, alphasort);
+    if (n == -1)
+    {
+        perror("scandir");
+        return;
+    }
+
+    int numberofElem = n;
+    int totalSize = 0;
+    while (n--)
+    {
+        if (stat(namelist[n]->d_name, &sb) == 1)
+        {
+            perror("stat");
+            return;
+        }
+        cout << namelist[n]->d_name << " " << (S_ISDIR(sb.st_mode) ? "DIR" : "FILE") << " " << sb.st_size << " " << ctime(&sb.st_mtime) << endl;
+        totalSize += sb.st_size;
+        free(namelist[n]);
+    }
+    cout << numberofElem << " elements with a total size of " << totalSize << " bytes";
+    free(namelist);
 }
 void Command::lcd(command_t *command)
 {
+    if ((*command->args).size() != 1)
+    {
+        printf("Error! The command lcd only accepts 1 argument!");
+        return;
+    }
+    if (chdir((*command->args)[0]) != 0)
+        perror("chdir() error()");
 }
 void Command::lpwd(command_t *command)
 {
+    if ((*command->args).size() != 0)
+    {
+        printf("Error! The command lpwd doesn't accept arguments!");
+        return;
+    }
+    char cwd[256];
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+        perror("getcwd() error");
+    else
+        printf("%s", cwd);
 }
 void Command::rmdir(command_t *command, bool isDir)
 {
@@ -615,6 +663,49 @@ void Command::rm(command_t *command)
 }
 void Command::upload(command_t *command)
 {
+    if ((*command->args).size() != 1)
+    {
+        printf("Error! The command upload only accepts 1 argument!");
+        return;
+    }
+
+    struct dirent **namelist; //files and dir list
+    struct stat sb;           //Get info of dir and file
+    int n;
+
+    n = scandir(".", &namelist, NULL, alphasort);
+    if (n == -1)
+    {
+        perror("scandir");
+        return;
+    }
+
+    int numberofElem = n;
+    int totalSize = 0;
+    while (n--)
+    {
+        if (strncmp(namelist[n]->d_name, (*command->args)[0], strlen(namelist[n]->d_name)) == 0)
+        {
+            if (stat(namelist[n]->d_name, &sb) == 1)
+            {
+                perror("stat");
+                return;
+            }
+
+            if (S_ISDIR(sb.st_mode))
+            {
+                printf("This is not a file!");
+                return;
+            }
+
+            Node *uploadNode = this->tree->addChild(this->tree->getCurrentDir(), namelist[n]->d_name, false);
+            uploadNode->setSize(sb.st_mtime);
+            uploadNode->setSize(sb.st_size);
+            return;
+        }
+        free(namelist[n]);
+    }
+    free(namelist);
 }
 
 vector<char *> *Command::getPath(char *path)
