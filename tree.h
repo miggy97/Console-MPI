@@ -1,9 +1,13 @@
 #ifndef TREE_H
 #define TREE_H
 #include <node.h>
-class Node;
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
+
+class Node;
 
 class Tree
 {
@@ -23,6 +27,11 @@ class Tree
     Node *getCurrentDir();
     void setCurrentDir(Node *node);
     void removeTree(Node *node);
+
+    void loadTree();
+    Node* loadNode(Node *lastNode, nodeSave *newNode);
+    void saveTree();
+    void saveNodesRecursive(Node *node, FILE *outfile);
 
     //Copy the node and all the dependencies recursively
     Node* copyNodeRecursive(Node *copyNode, Node *parent, char *name);

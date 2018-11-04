@@ -682,29 +682,38 @@ void Command::upload(command_t *command)
 
     int numberofElem = n;
     int totalSize = 0;
+    bool exist = false;
     while (n--)
     {
         if (strncmp(namelist[n]->d_name, (*command->args)[0], strlen(namelist[n]->d_name)) == 0)
         {
+            exist = true;
+
             if (stat(namelist[n]->d_name, &sb) == 1)
             {
                 perror("stat");
-                return;
+                break;
             }
 
             if (S_ISDIR(sb.st_mode))
             {
                 printf("This is not a file!");
-                return;
+                break;
             }
 
             Node *uploadNode = this->tree->addChild(this->tree->getCurrentDir(), namelist[n]->d_name, false);
             uploadNode->setSize(sb.st_mtime);
             uploadNode->setSize(sb.st_size);
-            return;
+            break;
         }
-        free(namelist[n]);
     }
+
+    if(!exist)
+        printf("Error! The file doesn't exist!");
+
+    //Free memory 
+    while (numberofElem--)
+        free(namelist[numberofElem]);
     free(namelist);
 }
 

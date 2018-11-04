@@ -1,5 +1,5 @@
 #include "tree.h"
-#include <string.h>
+#include <iostream>
 
 Tree::Tree()
 {
@@ -89,6 +89,91 @@ void Tree::removeTree(Node *node)
         for (auto i : (*node->getChilds()))
             removeTree(i);
     }
+}
+
+void Tree::loadTree()
+{
+    FILE *infile;
+    nodeSave node;
+
+    // Open person.dat for reading
+    infile = fopen("arbol.dat", "r");
+    if (infile == NULL)
+    {
+        printf("\nThere is no tree saved or error reading!\n");
+        return;
+    }
+    //root node
+    fread(&node, sizeof(nodeSave), 1, infile);
+    this->root->setLastModification(node.lastModification);
+
+    Node *lastNode = this->root;
+    // read file contents till end of file
+    while (fread(&node, sizeof(nodeSave), 1, infile))
+    {
+       lastNode = loadNode(lastNode, &node);
+    }
+
+    // close file
+    fclose(infile);
+}
+
+Node* Tree::loadNode(Node *lastNode, nodeSave *newNode)
+{
+    Node* parentNode = lastNode;
+    Node* childNode;
+
+    //Getting parent node by level
+    while(parentNode->getLevel() >= newNode->level){
+        parentNode = parentNode->getParent();
+    }
+
+    childNode = new Node(newNode->name, newNode->id, newNode->isDir, parentNode, this);
+    childNode->setLastModification(newNode->lastModification);
+    childNode->setSize(newNode->size);
+
+    parentNode->getChilds()->push_back(childNode);
+
+    this->numNodes++;
+    if(this->lastID < newNode->id) this->lastID = newNode->id;
+    
+    return childNode;
+}
+
+void Tree::saveTree()
+{
+    FILE *outfile;
+
+    // open file for writing
+    outfile = fopen("arbol.dat", "w");
+    if (outfile == NULL)
+    {
+        printf("\nError opend file\n");
+        fclose(outfile);
+        return;
+    }
+
+    // write struct to file
+    saveNodesRecursive(this->root, outfile);
+
+    if (fwrite != 0)
+        printf("contents to file written successfully !\n");
+    else
+        printf("error writing file !\n");
+
+    // close file
+    fclose(outfile);
+}
+
+void Tree::saveNodesRecursive(Node *node, FILE *outfile)
+{
+    nodeSave *saveNode = node->getNodeSave();
+    fwrite(saveNode, sizeof(nodeSave), 1, outfile);
+    for (auto i : (*node->getChilds()))
+    {
+        saveNodesRecursive(i, outfile);
+    }
+    delete saveNode;
 }
 
 Node *Tree::copyNodeRecursive(Node *copyNode, Node *parent, char *name)

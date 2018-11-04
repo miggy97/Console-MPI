@@ -3,6 +3,7 @@
 Terminal::Terminal()
 {
     this->tree = new Tree();
+    this->tree->loadTree();
     this->cmd = new Command(tree);
 }
 
@@ -158,6 +159,7 @@ void Terminal::exec_command(command_t *command)
         this->cmd->touch(command);
         break;
     case EXIT:
+        this->tree->saveTree();
         printf("Close file system\n");
         exit(0);
         break;
