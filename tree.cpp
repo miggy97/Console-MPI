@@ -103,6 +103,9 @@ void Tree::loadTree()
         printf("\nThere is no tree saved or error reading!\n");
         return;
     }
+
+    fread(&this->numNodes, sizeof(int), 1, infile);
+    fread(&this->lastID, sizeof(int), 1, infile);
     //root node
     fread(&node, sizeof(nodeSave), 1, infile);
     this->root->setLastModification(node.lastModification);
@@ -133,9 +136,6 @@ Node* Tree::loadNode(Node *lastNode, nodeSave *newNode)
     childNode->setSize(newNode->size);
 
     parentNode->getChilds()->push_back(childNode);
-
-    this->numNodes++;
-    if(this->lastID < newNode->id) this->lastID = newNode->id;
     
     return childNode;
 }
@@ -152,7 +152,9 @@ void Tree::saveTree()
         fclose(outfile);
         return;
     }
-
+    fwrite(&this->numNodes, sizeof(int), 1, outfile);
+    fwrite(&this->lastID, sizeof(int), 1, outfile);
+    
     // write struct to file
     saveNodesRecursive(this->root, outfile);
 

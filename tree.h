@@ -1,9 +1,9 @@
-#ifndef TREE_H
-#define TREE_H
-#include <node.h>
+#pragma once
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "utils.h"
+#include "node.h"
 
 using namespace std;
 
@@ -37,5 +37,3 @@ class Tree
     Node* copyNodeRecursive(Node *copyNode, Node *parent, char *name);
     ~Tree();
 };
-
-#endif

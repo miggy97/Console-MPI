@@ -1,22 +1,12 @@
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 #include "tree.h"
+#include "utils.h"
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
 
 using namespace std;
-
-typedef struct nodeSave
-{
-  char name[25];
-  int id;
-  int level;
-  bool isDir;
-  off_t size;
-  time_t lastModification;
-}nodeSave;
 
 class Tree;
 
@@ -55,5 +45,3 @@ public:
   nodeSave *getNodeSave();
 
 };
-
-#endif

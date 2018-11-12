@@ -51,59 +51,63 @@ int Terminal::get_command_type(char *command)
 {
     if (command != NULL)
     {
-        if (!strncmp("ls", command, strlen("ls")))
+        int len = strlen(command);
+            if (len > 0 && command[len - 1] == '\n')
+                command[len - 1] = '\0';
+
+        if (!strncmp("ls", command, strlen("ls")) && strlen(command) == strlen("ls"))
         {
             return CMD_LS;
         }
-        else if (!strncmp("pwd", command, strlen("pwd")))
+        else if (!strncmp("pwd", command, strlen("pwd")) && strlen(command) == strlen("pwd"))
         {
             return CMD_PWD;
         }
-        else if (!strncmp("cd", command, strlen("cd")))
+        else if (!strncmp("cd", command, strlen("cd")) && strlen(command) == strlen("cd"))
         {
             return CMD_CD;
         }
-        else if (!strncmp("mv", command, strlen("mv")))
+        else if (!strncmp("mv", command, strlen("mv")) && strlen(command) == strlen("mv"))
         {
             return CMD_MV;
         }
-        else if (!strncmp("cp", command, strlen("cp")))
+        else if (!strncmp("cp", command, strlen("cp")) && strlen(command) == strlen("cp"))
         {
             return CMD_CP;
         }
-        else if (!strncmp("mkdir", command, strlen("mkdir")))
+        else if (!strncmp("mkdir", command, strlen("mkdir")) && strlen(command) == strlen("mkdir"))
         {
             return CMD_MKDIR;
         }
-        else if (!strncmp("rmdir", command, strlen("rmdir")))
+        else if (!strncmp("rmdir", command, strlen("rmdir")) && strlen(command) == strlen("rmdir"))
         {
             return CMD_RMDIR;
         }
-        else if (!strncmp("rm", command, strlen("rm")))
+        else if (!strncmp("rm", command, strlen("rm")) && strlen(command) == strlen("rm"))
         {
             return CMD_RM;
         }
-        else if (!strncmp("lls", command, strlen("lls")))
+        else if (!strncmp("lls", command, strlen("lls")) && strlen(command) == strlen("lls"))
         {
             return CMD_LLS;
         }
-        else if (!strncmp("lcd", command, strlen("lcd")))
+        else if (!strncmp("lcd", command, strlen("lcd")) && strlen(command) == strlen("lcd"))
         {
             return CMD_LCD;
         }
-        else if (!strncmp("lpwd", command, strlen("lpwd")))
+        else if (!strncmp("lpwd", command, strlen("lpwd")) && strlen(command) == strlen("lpwd"))
         {
             return CMD_LPWD;
         }
-        else if (!strncmp("upload", command, strlen("upload")))
+        else if (!strncmp("upload", command, strlen("upload")) && strlen(command) == strlen("upload"))
         {
             return CMD_UPLOAD;
         }
-        else if (!strncmp("touch", command, strlen("touch")))
+        else if (!strncmp("touch", command, strlen("touch")) && strlen(command) == strlen("touch"))
         {
             return CMD_TOUCH;
         }
-        else if (!strncmp("exit", command, strlen("exit")))
+        else if (!strncmp("exit", command, strlen("exit")) && strlen(command) == strlen("exit"))
         {
             return EXIT;
         }

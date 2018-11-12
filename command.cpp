@@ -701,6 +701,10 @@ void Command::upload(command_t *command)
                 break;
             }
 
+            if(this->tree->findChild(this->tree->getCurrentDir(), namelist[n]->d_name) != NULL){
+                printf("Error! It already exist a dir/file with this name!");
+            }
+
             Node *uploadNode = this->tree->addChild(this->tree->getCurrentDir(), namelist[n]->d_name, false);
             uploadNode->setSize(sb.st_mtime);
             uploadNode->setSize(sb.st_size);
