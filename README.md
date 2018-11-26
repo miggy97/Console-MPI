@@ -1,4 +1,4 @@
 # CONSOLE-MPI
 
-## Athors
+## Authors
 Miguel Ingelmo Barrada y Álvaro López-Jurado 
